@@ -15,3 +15,7 @@ Runs a 5-whys root cause analysis when you ask for the "root cause" of a bug, in
 ### [teach-me](teach-me/SKILL.md)
 
 Turns the agent into a tutor when you want to learn a topic rather than get a one-shot answer. It diagnoses what you know, negotiates a learning path, then teaches topic by topic with non-negotiable comprehension gates: application questions with plausible-misconception distractors, no answer reveals, no passing by elimination, and spaced recall of earlier topics. Progress persists to `~/.claude/teach-me/` so lessons resume across sessions exactly where they left off.
+
+### [translate-article](translate-article/SKILL.md)
+
+Translates articles while preserving the author’s intent and voice. Reviews the source first, uses Latin American Spanish by default, localizes jokes and code comments, and checks images and key references.
