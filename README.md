@@ -6,7 +6,11 @@ Skills for Claude Code (or any agent harness that reads `SKILL.md` files). Insta
 
 ### [managing-github-prs](managing-github-prs/SKILL.md)
 
-Recipes for routine pull request work with the `gh` CLI. It covers moving your checkout onto a PR's branch without losing uncommitted work, and reading a PR's complete diff even when an output-compressing hook or the harness truncates it. It also covers listing unresolved review threads, then replying to and resolving them through GraphQL, as well as opening draft and stacked PRs, rebasing a stacked branch with `--onto` after its base is rewritten, and watching CI in the background. Each recipe lists the trap that tends to go wrong with it.
+Recipes for routine pull request work with the `gh` CLI. It covers moving your checkout onto a PR's branch without losing uncommitted work, and reading a PR's complete diff even when an output-compressing hook or the harness truncates it. It also covers listing unresolved review threads, then replying to and resolving them through GraphQL, as well as verifying a branch before it ships (build, typecheck, scoped lint, tests), picking the PR title prefix and deciding whether it needs a changeset, opening draft and stacked PRs, rebasing a stacked branch with `--onto` after its base is rewritten, and watching CI in the background. Each recipe lists the trap that tends to go wrong with it.
+
+### [reviewing-code](reviewing-code/SKILL.md)
+
+Reviews a PR, branch, or local diff in two passes: the built-in `code-review` skill for correctness bugs, then a house checklist for what it doesn't catch — redundant endpoints, reinvented helpers, single-caller abstractions, queries or validation in the wrong layer, double awaits, narrating comments, tautological tests, out-of-scope hunks, and migrations in non-major releases. Every finding is confirmed against the code before it is reported.
 
 ### [root-cause-analysis](root-cause-analysis/SKILL.md)
 

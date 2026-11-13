@@ -1,6 +1,6 @@
 ---
 name: managing-github-prs
-description: Use when asked to move to or check out a PR's branch, review a PR's full diff, answer or resolve PR review comments (cubic, CodeRabbit, reviewers), open a draft or stacked PR, keep a stacked branch in sync with its base, or watch a PR's CI — in a repo using the gh CLI.
+description: Use when asked to move to or check out a PR's branch, review a PR's full diff, answer or resolve PR review comments (cubic, CodeRabbit, reviewers), verify a fix before shipping it, pick a PR title prefix or decide on a changeset, open a draft or stacked PR, keep a stacked branch in sync with its base, or watch a PR's CI — in a repo using the gh CLI.
 ---
 
 # Managing GitHub PRs
@@ -58,6 +58,34 @@ Verify every bot claim against the code before answering. Replies are one line:
 - already deferred in the PR description: point to that section
 - declined: the reason
 
+## Verify before opening or marking ready
+
+Run on the branch's changed code before the PR is opened, before saying a fix is done, and in every implementer subagent prompt:
+
+1. Build first when the repo is a monorepo whose packages typecheck against built output (e.g. `yarn build`, or `yarn turbo run build --filter=<changed pkgs>`). Stale dist produces phantom type and lint errors; don't diagnose any failure until the build is fresh.
+2. Typecheck (`tsc --noEmit` or the package's `typecheck` script).
+3. Lint (`yarn lint`). Run `--fix` only on the files this branch changed, never on a directory or the repo root. Autofix rewrites every fixable rule, not only the one you meant: after it, read `git diff` and revert hunks outside the PR's concern.
+4. Unit tests for the touched code.
+5. `rg "console\.log" <changed test files>`: strip debug logs you added.
+6. `git status --short`: only intended files changed.
+
+Report what ran and its result. A step not run is reported as not run.
+
+## Classify the PR
+
+| Change | Title prefix | Changeset |
+|---|---|---|
+| Bug that shipped in a release | `fix:` | Yes, branch from the default branch; backport only for security or high-severity bugs |
+| Fix on an unreleased `release-*` branch | `regression:` | No. Minimal diff: strip improvements and list them under "Further comments" as follow-ups |
+| Only test files | `test:` | No |
+| Bundling or import-path only | `chore:` | No |
+| Refactor with no observable effect | `refactor:` / `chore:` | No |
+| Runtime behavior or performance users notice | `feat:` / `fix:` / `chore:` | Yes |
+
+Changeset text becomes release notes for admins: say what users observe (faster search, a setting now applies), never the mechanism (aggregations, indexes, refactors). No "behavior is unchanged" padding.
+
+When the repo has no `.changeset/` directory, skip the changeset column.
+
 ## Open a draft PR (stacked or not)
 
 ```bash
@@ -72,7 +100,11 @@ EOF
 gh pr view <N> --json commits,changedFiles --jq '{commits:(.commits|length),changedFiles}'
 ```
 
-Use the section headings from the repo's `.github/PULL_REQUEST_TEMPLATE.md`; the four above are one example. Always `--draft`. Leave out AI and Co-Authored-By lines. In a public repo, leave out internal or customer ticket references too. If the commit and file counts are far above what you changed, the base moved under you. See the next section.
+Use the section headings from the repo's `.github/PULL_REQUEST_TEMPLATE.md`; the four above are one example. Always `--draft`. Leave out AI and Co-Authored-By lines. In a public repo, link only the issue-tracker ticket (e.g. Jira) under "Issue(s)"; never customer-support ticket numbers. If the commit and file counts are far above what you changed, the base moved under you. See the next section.
+
+In every reply, render PR numbers and ticket keys as markdown links (`[#123](https://github.com/<owner>/<repo>/pull/123)`, `[KEY-1](<tracker>/browse/KEY-1)`).
+
+When a ticket tracks the PR, its description documents only the fix that was chosen, with the PR link. Fix options belong in the chat, not the ticket.
 
 ## Keep a stacked branch in sync
 
@@ -107,3 +139,8 @@ gh pr checks <N> --watch --interval 60             # Bash run_in_background, tim
 | Resolving a thread with REST | GraphQL `resolveReviewThread` with the `PRRT_` ID |
 | Stacked PR shows dozens of commits | Base was rewritten: `rebase --onto origin/<base> <old-base-sha>` |
 | Trusting PR counts right after a push | Re-query; GitHub recomputes lazily |
+| Diagnosing lint/tsc errors on a stale build | Build first, then re-run the checks |
+| `eslint --fix .` or on a directory | `--fix` only the branch's changed files; revert out-of-scope hunks |
+| Changeset on a test-only, bundling, or release-branch PR | None; use the table in "Classify the PR" |
+| Changeset describing internals | Describe what users observe |
+| Bare `#123` or ticket key in a reply | Markdown link |
