@@ -16,7 +16,9 @@ Translate the author's article, not just its sentences. Preserve its meaning, vo
 ## Translate
 
 - Use natural, conversational language that sounds like the author. Translate literally when it carries the meaning; translate freely when a literal rendering would obscure the intent. Preserve emphasis, uncertainty, examples, and the scope of claims. Do not invent facts, personal experiences, or humor.
-- Localize jokes, idioms, and cultural references where needed. Prefer a natural equivalent over a forced joke; keep the meaning when a joke cannot be carried across.
+- Write titles and headings as natural, specific Spanish, not word-for-word translations. Prefer everyday phrasing that fits the section; for example, “Piensa antes de subir tu PR” instead of “Piensa antes de enviar código”. Avoid awkward calques such as “más fácil en lo mecánico”.
+- When the site numbers the table of contents automatically, omit redundant numbers from translated headings. Preserve any substantive numbering and existing public anchors.
+- Localize jokes, idioms, and cultural references where needed. Prefer a natural equivalent; remove the joke when it does not work in the target language, while preserving the point.
 - Keep code, identifiers, commands, output, and behavior intact; translate human-language comments in code. Check that comment changes do not affect runnable examples or expected output.
 - Translate titles, excerpts, captions, alt text, and other reader-facing metadata. Retain technical terms that are clearer in the original language. Preserve links, attribution, and existing public URLs and anchors.
 
