@@ -4,6 +4,10 @@ Skills for Claude Code (or any agent harness that reads `SKILL.md` files). Insta
 
 ## Skills
 
+### [filling-jira-tickets](filling-jira-tickets/SKILL.md)
+
+Creates CORE Jira tickets and fills existing ones. Sets priority from the team's priority table, then fills the version and root-cause fields. For bugs and regressions it traces the introducing commit and PR, takes Root Cause from that PR (or "Since creation"), and takes Defect from from the first release containing it. It targets Fix versions from the PR's base branch. On existing tickets it only fills empty fields.
+
 ### [managing-github-prs](managing-github-prs/SKILL.md)
 
 Recipes for routine pull request work with the `gh` CLI. It covers moving your checkout onto a PR's branch without losing uncommitted work, and reading a PR's complete diff even when an output-compressing hook or the harness truncates it. It also covers listing unresolved review threads, then replying to and resolving them through GraphQL, as well as verifying a branch before it ships (build, typecheck, scoped lint, tests), picking the PR title prefix and deciding whether it needs a changeset, opening draft and stacked PRs, rebasing a stacked branch with `--onto` after its base is rewritten, and watching CI in the background. Each recipe lists the trap that tends to go wrong with it.
