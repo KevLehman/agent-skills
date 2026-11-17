@@ -7,7 +7,7 @@ description: Use when creating a Jira ticket in the CORE project, or filling or 
 
 ## Overview
 
-Every CORE ticket gets a priority from the table below and a Fix version. Bugs and regressions also get Defect from and Root Cause. Never guess a value you cannot verify: ask.
+Every CORE ticket gets a priority from the table below and a Fix version. Fixes (bugs and regressions) also get Root Cause, and Defect from only when it follows from that Root Cause. Never guess a value you cannot verify: ask.
 
 Jira site: `cloudId` `6e1c19a7-7928-4dc7-aad0-584fdde3c00c`, project `CORE`.
 
@@ -40,7 +40,9 @@ Critical vulnerability: CVSS >= 9.0; otherwise it is a plain vulnerability. Omni
 4. **Root Cause** is that PR's URL. If the code is from the original implementation of the feature, write `Since creation` (Defect from is then the version the feature first shipped in).
 5. If you cannot trace the commit or PR, ask Kevin. Do not fill either field with a guess.
 
-Features, tech debt, and refactors: leave Defect from and Root Cause empty.
+Defect from is only for fixes (bugs and regressions), and it is always derived from the Root Cause: it is the first stable release containing the Root Cause PR, never an independent guess. No traced Root Cause means no Defect from; leave both empty and ask.
+
+Features, tech debt, refactors, and follow-up tasks that ship no fix: leave Defect from and Root Cause empty.
 
 ## Fix versions
 
@@ -71,5 +73,6 @@ Call `createJiraIssue` with `projectKey: "CORE"` and the four fields in `additio
 
 - Taking Defect from from the fix PR's release instead of the introducing PR's release.
 - Setting Fix versions to the latest released version instead of the next unreleased one.
+- Setting Defect from on a ticket that is not a fix, or without a Root Cause to derive it from.
 - Filling Root Cause with prose instead of the PR URL.
 - Overwriting a field that already has a value.
