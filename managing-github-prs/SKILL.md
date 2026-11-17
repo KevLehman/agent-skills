@@ -112,11 +112,13 @@ When a ticket tracks the PR, its description documents only the fix that was cho
 git fetch origin <base> <branch>
 git log --oneline origin/<base>..HEAD        # should list only this branch's commits
 git cherry -v origin/<base> <old-base-ref>   # '-' = already in base under a new SHA
+git log --oneline <branch>..origin/<branch>  # preserve any remote commits missing locally
 git rebase --onto origin/<base> <old-base-sha> <branch>
 git push --force-with-lease origin <branch>
 ```
 
 - If the base was rebased or squash-merged, a plain `git rebase origin/<base>` replays the old base commits. Use `--onto` with the old base SHA.
+- Preserve any remote commits missing locally before rebasing; the lease only protects changes made since the last fetch.
 - After a push, GitHub recomputes PR counts lazily. Re-run `gh pr view` before you trust them.
 - Sync means rebase, never merge.
 
