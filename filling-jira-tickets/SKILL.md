@@ -32,7 +32,9 @@ Pick the highest row that matches. "Mid" is Jira `Medium`.
 
 Critical vulnerability: CVSS >= 9.0; otherwise it is a plain vulnerability. Omnichannel work is Lowest only if no higher row matches (a regression in Omnichannel is still Highest).
 
-## Bugs and regressions: Defect from and Root Cause
+## Fixes: Root Cause and Defect from
+
+Finding the Root Cause usually takes a real root cause analysis, not just a `git blame` on the line the fix touches: the line that changed is often a symptom, and the introducing change can be elsewhere. If the cause is not already established, use the `root-cause-analysis` skill first, then fill the fields from its verified conclusion.
 
 1. Find the commit that introduced the defect (`git log -S'<symbol>' -- <path>`, `git blame`).
 2. Find its PR: `gh api repos/RocketChat/Rocket.Chat/commits/<sha>/pulls`.
@@ -56,7 +58,7 @@ The version name must already exist in Jira. Check it against the `fixVersions` 
 
 ## Creating
 
-Call `createJiraIssue` with `projectKey: "CORE"` and the four fields in `additional_fields`. Description rules:
+Call `createJiraIssue` with `projectKey: "CORE"` and the applicable fields in `additional_fields`: priority and Fix versions always; Root Cause and Defect from only for fixes with a traced Root Cause. Description rules:
 
 - Reference tickets and PRs by Jira link and GitHub link only. Never reference Zoho tickets (public repo, customer context).
 - Describe the chosen fix and link the PR, not the list of rejected options.
@@ -71,6 +73,7 @@ Call `createJiraIssue` with `projectKey: "CORE"` and the four fields in `additio
 
 ## Common mistakes
 
+- Filling Root Cause from `git blame` alone, without confirming the cause (root cause analysis).
 - Taking Defect from from the fix PR's release instead of the introducing PR's release.
 - Setting Fix versions to the latest released version instead of the next unreleased one.
 - Setting Defect from on a ticket that is not a fix, or without a Root Cause to derive it from.
